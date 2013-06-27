@@ -67,7 +67,7 @@ import org.codehaus.groovy.grails.orm.hibernate.HibernateEventListeners
  * <p/>
  */
 class AuditLoggingGrailsPlugin {
-    def version = "1.0.0-SNAPSHOT"
+    def version = "1.0.0"
     def grailsVersion = '2.0 > *'
     def author = "Shawn Hartsock"
     def authorEmail = "hartsock@acm.org"
