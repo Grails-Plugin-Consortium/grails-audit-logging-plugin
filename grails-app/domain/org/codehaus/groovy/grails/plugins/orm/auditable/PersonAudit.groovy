@@ -5,10 +5,13 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode
 @ToString(includeFields=true)
-class PersonAudit implements Serializable {
+class PersonAudit implements Serializable, AuditClass {
 
     String name
     Date birthDate
+
+    String auditID
+    String auditText
 
     static mapping = {
         autoTimestamp true

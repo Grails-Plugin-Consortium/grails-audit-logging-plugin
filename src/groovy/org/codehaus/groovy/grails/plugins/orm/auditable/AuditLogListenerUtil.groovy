@@ -1,5 +1,6 @@
 package org.codehaus.groovy.grails.plugins.orm.auditable
 
+import groovy.util.logging.Commons
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 
 import javax.servlet.http.HttpSession
@@ -17,7 +18,10 @@ import javax.servlet.http.HttpSession
  * TODO: write a howto for the grails website on how to set up a closure
  * for the AuditLogListener and feed it to the Listener's configurator...
  */
+@Commons
 public class AuditLogListenerUtil {
+
+    static final String ANONYMOUS_USER = 'anonymousUser'
 
     /**
      * The original getActor method transplanted to the utility class as
@@ -60,7 +64,7 @@ public class AuditLogListenerUtil {
      * were logged in so the problem of null session.user did not come up in testing.
      */
     static resolve(attr, str, log) {
-        def tokens = str?.split("\\.")
+        def tokens = str?.split('\\.')
         def res = attr
         log.trace "resolving recursively ${str} from request attributes..."
         tokens.each({
@@ -69,7 +73,7 @@ public class AuditLogListenerUtil {
                 if(res) {
                     res = res."${it}"
                 }
-            } catch(groovy.lang.MissingPropertyException mpe) {
+            } catch(MissingPropertyException mpe) {
                 log.debug """
 AuditLogListener:
 

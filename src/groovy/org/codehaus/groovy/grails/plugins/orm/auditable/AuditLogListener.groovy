@@ -4,6 +4,7 @@ import grails.util.Environment
 import groovy.util.logging.Commons
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.codehaus.groovy.grails.orm.hibernate.cfg.GrailsDomainBinder
 
 /**
  * @author shawn hartsock
@@ -26,7 +27,6 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
  * 2009-10-04 preparing beta release
  * 2010-10-13 add a transactional config so transactions can be manually toggled by a user OR automatically disabled for testing
  */
-import org.codehaus.groovy.grails.orm.hibernate.cfg.GrailsDomainBinder
 import org.hibernate.HibernateException
 import org.hibernate.Session
 import org.hibernate.SessionFactory
@@ -412,7 +412,8 @@ public class AuditLogListener implements PreDeleteEventListener, PostInsertEvent
     }
 
     private String getCurrentUser() {
-        SecurityContextHolder?.context?.authentication?.name ?: BackboneContants.ANONYMOUS_USER
+        String anonymousUser = ConfigurationHolder.config.auditLog?.anonymousUser ?: AuditLogListenerUtil.ANONYMOUS_USER
+        SecurityContextHolder?.context?.authentication?.name ?: anonymousUser
     }
 
     String truncate(final obj) {
@@ -496,7 +497,7 @@ public class AuditLogListener implements PreDeleteEventListener, PostInsertEvent
             }
             session.close()
             log.trace "session closed"
-        } catch(org.hibernate.HibernateException ex) {
+        } catch(HibernateException ex) {
             log.error "AuditLogEvent save has failed!"
             log.error ex.message
             log.error audit.errors
